@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import es.uca.gii.csi18.anakin.data.Orientacion;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -32,10 +33,11 @@ class ActividadTest {
 
     @Test
     void testCreate() throws Exception {
-        Actividad actividad = Actividad.Create("Batuka", 5, "Dooku");
+        Actividad actividad = Actividad.Create("Batuka", 5, "Dooku", new Orientacion(1));
         assertEquals("Batuka", actividad.getNombre());
         assertEquals("Dooku", actividad.getMonitor());
         assertEquals(5, actividad.getPlazas());
+        assertEquals(1,actividad.getOrientacion().getId());
     }
 
     @Test
@@ -43,7 +45,7 @@ class ActividadTest {
         Actividad actividad = new Actividad(1);
         ArrayList<Actividad> aActividad = new ArrayList<Actividad>();
 
-        aActividad = actividad.Select(null, null, null);
+        aActividad = actividad.Select(null, null, null, null);
         actividad = aActividad.get(0);
         assertEquals(1, actividad.getCodigo());
         assertEquals("Petanca", actividad.getNombre());
@@ -62,14 +64,14 @@ class ActividadTest {
         assertEquals("Yoda", actividad.getMonitor());
         assertEquals(22, actividad.getPlazas());
 
-        aActividad = actividad.Select(null, 22, null);
+        aActividad = actividad.Select(null, 22, null, null);
         actividad = aActividad.get(0);
         assertEquals(3, actividad.getCodigo());
         assertEquals("Tiro con arco", actividad.getNombre());
         assertEquals("Yoda", actividad.getMonitor());
         assertEquals(22, actividad.getPlazas());
 
-        aActividad = actividad.Select(null, null, "Windu");
+        aActividad = actividad.Select(null, null, "Windu", null);
         actividad = aActividad.get(0);
         assertEquals(2, actividad.getCodigo());
         assertEquals("Meditacion", actividad.getNombre());

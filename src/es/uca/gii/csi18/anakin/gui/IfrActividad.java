@@ -1,13 +1,9 @@
 package es.uca.gii.csi18.anakin.gui;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import es.uca.gii.csi18.anakin.data.*;
 
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -17,6 +13,8 @@ public class IfrActividad extends JInternalFrame {
     private JTextField txtPlazas;
     private JTextField txtMonitor;
     private Actividad _actividad = null;
+    private JComboBox<Orientacion> cmbOrientacion;
+
 
     /**
      * Create the frame.
@@ -57,10 +55,25 @@ public class IfrActividad extends JInternalFrame {
         getContentPane().add(txtMonitor);
         txtMonitor.setColumns(10);
 
+        JLabel lblOrientacion = new JLabel("Orientacion");
+        lblOrientacion.setBounds(10, 11, 82, 14);
+        getContentPane().add(lblOrientacion);
+
+        cmbOrientacion = new JComboBox<Orientacion>();
+        try {
+            cmbOrientacion.setModel(new OrientacionListModel(Orientacion.Select()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cmbOrientacion.setBounds(130, 8, 86, 20);
+        getContentPane().add(cmbOrientacion);
+
+
         if (_actividad != null) {
             txtNombre.setText(_actividad.getNombre());
             txtPlazas.setText(Integer.toString(_actividad.getPlazas()));
             txtMonitor.setText(_actividad.getMonitor());
+            cmbOrientacion.setSelectedIndex(_actividad.getOrientacion().getId() - 1);
         }
 
         JButton butGuardar = new JButton("Guardar");
@@ -68,15 +81,21 @@ public class IfrActividad extends JInternalFrame {
             public void actionPerformed(ActionEvent arg0) {
                 try {
                     int iPlazas = Integer.parseInt(txtPlazas.getText());
+
+                    if (cmbOrientacion.getModel().getSelectedItem() == null)
+                        throw new Exception ("Selecciona una orientación");
                     if (_actividad == null) {
-                        _actividad = Actividad.Create(txtNombre.getText(), iPlazas, txtMonitor.getText());
+                        _actividad = Actividad.Create(txtNombre.getText(),
+                                iPlazas,
+                                txtMonitor.getText(),
+                                (Orientacion)cmbOrientacion.getModel().getSelectedItem()
+                        );
                     } else {
                         _actividad.setNombre(txtNombre.getText());
                         _actividad.setPlazas(iPlazas);
                         _actividad.setMonitor(txtMonitor.getText());
                         _actividad.Update();
                     }
-
                 } catch (Exception ee) {
                     JOptionPane.showMessageDialog(null, ee.getMessage());
                 }

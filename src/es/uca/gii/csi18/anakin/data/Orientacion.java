@@ -26,6 +26,10 @@ public class Orientacion {
         }
     }
 
+    public Orientacion (int iId, Connection con) throws Exception {
+
+    }
+
     public int getId() {
         return _iId;
     }
@@ -58,6 +62,24 @@ public class Orientacion {
                 rs.close();
             if (con != null)
                 con.close();
+        }
+    }
+
+    private void Initialize(int iId, Connection con) throws Exception {
+        ResultSet rs = null;
+        try {
+            StringBuilder sbQuery = new StringBuilder();
+            sbQuery.append("SELECT id, nombre FROM orientacion WHERE id = ");
+            sbQuery.append(iId).append(";");
+
+            rs = con.createStatement().executeQuery(sbQuery.toString());
+            rs.next();
+            _sNombre = rs.getString("nombre");
+        } catch (SQLException ee) {
+            throw ee;
+        } finally {
+            if (rs != null)
+                rs.close();
         }
     }
 

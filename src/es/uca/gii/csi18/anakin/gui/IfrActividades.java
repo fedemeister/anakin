@@ -2,18 +2,14 @@ package es.uca.gii.csi18.anakin.gui;
 
 import java.awt.EventQueue;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridLayout;
-import javax.swing.JTextField;
 
 import es.uca.gii.csi18.anakin.data.Actividad;
+import es.uca.gii.csi18.anakin.data.Orientacion;
 
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -25,6 +21,8 @@ public class IfrActividades extends JInternalFrame {
     private JTextField txtPlazas;
     private JTable tabResult;
     private Container pnlParent;
+
+    private JComboBox<Orientacion> cmbOrientacion;
 
     /**
      * Create the frame.
@@ -61,17 +59,27 @@ public class IfrActividades extends JInternalFrame {
         panel.add(txtPlazas);
         txtPlazas.setColumns(10);
 
+        JLabel lblOrientacion = new JLabel("Orientacion");
+        cmbOrientacion.setEditable(true);
+        panel.add(cmbOrientacion);
+        try {
+            cmbOrientacion.setModel(new OrientacionListModel(Orientacion.Select()));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
         JButton btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 String sNombre = txtNombre.getText().isEmpty() ?
                         null : txtNombre.getText();
                 Integer iPlazas = txtPlazas.getText().isEmpty() ?
-                        null : new Integer(Integer.parseInt(txtPlazas.getText()));
+                        null : Integer.parseInt(txtPlazas.getText());
                 String sMonitor = txtMonitor.getText().isEmpty() ?
                         null : txtMonitor.getText();
+                String sOrientacion = cmbOrientacion.getEditor().getItem().toString();
                 try {
-                    tabResult.setModel(new ActividadesTableModel(Actividad.Select(sNombre, iPlazas, sMonitor)));
+                    tabResult.setModel(new ActividadesTableModel(Actividad.Select(sNombre, iPlazas, sMonitor, sOrientacion)));
                 } catch (Exception ee) {
                 }
             }
